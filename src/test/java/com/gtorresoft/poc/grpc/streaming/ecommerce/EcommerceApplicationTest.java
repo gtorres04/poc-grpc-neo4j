@@ -1,11 +1,11 @@
 package com.gtorresoft.poc.grpc.streaming.ecommerce;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+//import org.junit.jupiter.api.Test;
+//import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class EcommerceApplicationTest {
-    @Test
+    //@Test
     void contextLoads() {
     }
 

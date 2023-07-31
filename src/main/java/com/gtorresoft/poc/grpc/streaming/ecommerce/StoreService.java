@@ -2,6 +2,7 @@ package com.gtorresoft.poc.grpc.streaming.ecommerce;
 
 import com.google.type.Date;
 import io.grpc.stub.StreamObserver;
+import net.devh.boot.grpc.server.service.GrpcService;
 import org.apache.commons.lang3.RandomStringUtils;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import java.time.LocalDate;
 import java.util.Random;
 
+@GrpcService
 public class StoreService extends StoreProviderGrpc.StoreProviderImplBase {
 
     //private static final Logger logger = LoggerFactory.getLogger(StoreService.class.getName());
