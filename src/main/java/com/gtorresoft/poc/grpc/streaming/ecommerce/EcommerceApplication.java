@@ -1,31 +1,31 @@
 package com.gtorresoft.poc.grpc.streaming.ecommerce;
 
-//import org.springframework.boot.SpringApplication;
-//import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import io.grpc.Server;
+/*import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerFactory;*/
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+//import java.util.concurrent.TimeUnit;
 
-//@SpringBootApplication
+@SpringBootApplication
 public class EcommerceApplication {
-	private static final Logger logger = LoggerFactory.getLogger(EcommerceApplication.class.getName());
+	/*private static final Logger logger = LoggerFactory.getLogger(EcommerceApplication.class.getName());
 	private final int port;
-	private final Server server;
+	private final Server server;*/
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		//SpringApplication.run(EcommerceApplication.class, args);
-		EcommerceApplication storeServer = new EcommerceApplication(8980);
+		SpringApplication.run(EcommerceApplication.class, args);
+		/*EcommerceApplication storeServer = new EcommerceApplication(8980);
 		storeServer.start();
 		if (storeServer.server != null) {
 			storeServer.server.awaitTermination();
-		}
+		}*/
 	}
-	public EcommerceApplication(int port) {
+	/*public EcommerceApplication(int port) throws IOException {
 		this.port = port;
 		server = ServerBuilder.forPort(port)
 				.addService(new StoreService())
@@ -52,6 +52,6 @@ public class EcommerceApplication {
 			server.shutdown()
 					.awaitTermination(30, TimeUnit.SECONDS);
 		}
-	}
+	}*/
 
 }

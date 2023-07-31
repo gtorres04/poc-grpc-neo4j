@@ -3,15 +3,15 @@ package com.gtorresoft.poc.grpc.streaming.ecommerce;
 import com.google.type.Date;
 import io.grpc.stub.StreamObserver;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.Random;
 
 public class StoreService extends StoreProviderGrpc.StoreProviderImplBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(StoreService.class.getName());
+    //private static final Logger logger = LoggerFactory.getLogger(StoreService.class.getName());
 
         StoreService() {
         }
@@ -89,7 +89,7 @@ public class StoreService extends StoreProviderGrpc.StoreProviderImplBase {
 
 				@Override
 				public void onError(Throwable t) {
-					logger.warn("error:{}", t.getMessage());
+					//logger.warn("error:{}", t.getMessage());
 					
 				}
 
@@ -121,7 +121,7 @@ public class StoreService extends StoreProviderGrpc.StoreProviderImplBase {
 	
 	            @Override
 	            public void onError(Throwable t) {
-	                logger.warn("error:{}", t.getMessage());
+	                //logger.warn("error:{}", t.getMessage());
 	            }
 
 	        };
