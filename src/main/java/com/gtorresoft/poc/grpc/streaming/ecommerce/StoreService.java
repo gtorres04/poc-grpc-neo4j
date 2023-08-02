@@ -4,6 +4,7 @@ import com.google.type.Date;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
@@ -15,118 +16,132 @@ public class StoreService extends StoreProviderGrpc.StoreProviderImplBase {
 
     //private static final Logger logger = LoggerFactory.getLogger(StoreService.class.getName());
 
-        StoreService() {
-        }
-        
-        @Override
-        public void unaryStreamingGetProductById(ProductById request, StreamObserver<Product> responseObserver) {
-        	
-        	Random random = new Random();
-            Product response = Product.newBuilder()
+    @Override
+    public void unaryStreamingCreateProduct(Product request, StreamObserver<Product> responseObserver) {
+        ProductNode productNode = new ProductNode();
+        productNode.setName(request.getProductName());
+        productNode.setDescription(request.getProductDescription());
+        productNode.setPrice(request.getProductPrice());
+        productRepository.save(productNode);
+        responseObserver.onNext(request.toBuilder().setProductId(productNode.getId().toString()).build());
+        responseObserver.onCompleted();
+    }
+
+    @Autowired
+    ProductRepository productRepository;
+
+    StoreService() {
+    }
+
+    @Override
+    public void unaryStreamingGetProductById(ProductById request, StreamObserver<Product> responseObserver) {
+
+        Random random = new Random();
+        Product response = Product.newBuilder()
                 .setProductId(request.getProductId())
                 .setProductName(RandomStringUtils.randomAlphanumeric(10))
                 .setProductDescription(RandomStringUtils.randomAlphanumeric(10))
                 .setProductPrice(random.nextDouble())
                 .build();
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
-        }
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
 
-        @Override
-        public void serverSideStreamingGetProductsByName(ProductsByName request, StreamObserver<Product> responseObserver) {
+    @Override
+    public void serverSideStreamingGetProductsByName(ProductsByName request, StreamObserver<Product> responseObserver) {
 
-            for (int i = 1; i <= 5; i++) {
-            	Random random = new Random();
-            	Product product = Product.newBuilder()
-            		.setProductId(RandomStringUtils.randomAlphanumeric(10))
-            		.setProductName(request.getProductName() + " "+ RandomStringUtils.randomAlphanumeric(10))
-            		.setProductDescription(RandomStringUtils.randomAlphanumeric(20))
-            		.setProductPrice(random.nextDouble())
+        for (int i = 1; i <= 5; i++) {
+            Random random = new Random();
+            Product product = Product.newBuilder()
+                    .setProductId(RandomStringUtils.randomAlphanumeric(10))
+                    .setProductName(request.getProductName() + " " + RandomStringUtils.randomAlphanumeric(10))
+                    .setProductDescription(RandomStringUtils.randomAlphanumeric(20))
+                    .setProductPrice(random.nextDouble())
                     .build();
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					throw new RuntimeException(e);
-				}
-				responseObserver.onNext(product);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-            responseObserver.onCompleted();
+            responseObserver.onNext(product);
         }
-        
-        @Override
-        public StreamObserver<Product> clientSideStreamingCreateOrder(final StreamObserver<Order> responseObserver) {
-            return new StreamObserver<Product>() {
-            	
-                int count;
-                double price = 0.0;
-                
-                @Override
-                public void onNext(Product product) {
-                    count++;
-                    price = price + product.getProductPrice();
-                    
-                }
+        responseObserver.onCompleted();
+    }
 
-                @Override
-                public void onCompleted() {
-                	
-                	LocalDate currentDate = LocalDate.now();
-                	Date orderDate = Date.newBuilder()
-                	.setDay(currentDate.getDayOfMonth())
-                	.setMonth(currentDate.getMonthValue())
-                	.setYear(currentDate.getYear())
-                	.build();
-                	
-                	Order order = Order.newBuilder()
-                	.setOrderId(RandomStringUtils.randomAlphanumeric(10))
-                	.setOrderStatus("Pending")
-                	.setOrderDate(orderDate)
-                	.setItemsNumber(count)
-                	.setTotalAmount(price)
-                	.build();
+    @Override
+    public StreamObserver<Product> clientSideStreamingCreateOrder(final StreamObserver<Order> responseObserver) {
+        return new StreamObserver<Product>() {
 
-                    responseObserver.onNext(order);
-                    responseObserver.onCompleted();
-                }
+            int count;
+            double price = 0.0;
 
-				@Override
-				public void onError(Throwable t) {
-					//logger.warn("error:{}", t.getMessage());
-					
-				}
+            @Override
+            public void onNext(Product product) {
+                count++;
+                price = price + product.getProductPrice();
 
-            };
-        }
-    
-	    @Override
-	    public StreamObserver<Stock> bidirectionalStreamingUpdateStock(final StreamObserver<StockByProduct> responseObserver) {
-	        return new StreamObserver<Stock>() {
-	        	
-	        	@Override
-				public void onNext(Stock stock) {
-	        		Random random = new Random();
-	        		StockByProduct stockByProduct = StockByProduct.newBuilder()
-	        				.setProductId(stock.getProductId())
-	        				.setProductName(RandomStringUtils.randomAlphanumeric(10))
-	        				.setProductDescription(RandomStringUtils.randomAlphanumeric(10))
-	        				.setProductPrice(random.nextDouble())
-	        				.setItemsNumber(stock.getItemsNumber()+100)
-                            .build();
-                        responseObserver.onNext(stockByProduct);
-					
-				}
-	        	
-	            @Override
-	            public void onCompleted() {
-	                responseObserver.onCompleted();
-	            }
-	
-	            @Override
-	            public void onError(Throwable t) {
-	                //logger.warn("error:{}", t.getMessage());
-	            }
+            }
 
-	        };
-	    }
- 
+            @Override
+            public void onCompleted() {
+
+                LocalDate currentDate = LocalDate.now();
+                Date orderDate = Date.newBuilder()
+                        .setDay(currentDate.getDayOfMonth())
+                        .setMonth(currentDate.getMonthValue())
+                        .setYear(currentDate.getYear())
+                        .build();
+
+                Order order = Order.newBuilder()
+                        .setOrderId(RandomStringUtils.randomAlphanumeric(10))
+                        .setOrderStatus("Pending")
+                        .setOrderDate(orderDate)
+                        .setItemsNumber(count)
+                        .setTotalAmount(price)
+                        .build();
+
+                responseObserver.onNext(order);
+                responseObserver.onCompleted();
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                //logger.warn("error:{}", t.getMessage());
+
+            }
+
+        };
+    }
+
+    @Override
+    public StreamObserver<Stock> bidirectionalStreamingUpdateStock(final StreamObserver<StockByProduct> responseObserver) {
+        return new StreamObserver<Stock>() {
+
+            @Override
+            public void onNext(Stock stock) {
+                Random random = new Random();
+                StockByProduct stockByProduct = StockByProduct.newBuilder()
+                        .setProductId(stock.getProductId())
+                        .setProductName(RandomStringUtils.randomAlphanumeric(10))
+                        .setProductDescription(RandomStringUtils.randomAlphanumeric(10))
+                        .setProductPrice(random.nextDouble())
+                        .setItemsNumber(stock.getItemsNumber() + 100)
+                        .build();
+                responseObserver.onNext(stockByProduct);
+
+            }
+
+            @Override
+            public void onCompleted() {
+                responseObserver.onCompleted();
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                //logger.warn("error:{}", t.getMessage());
+            }
+
+        };
+    }
+
 }
