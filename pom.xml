@@ -2,14 +2,63 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<!--<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.1.2</version>
+	</parent>-->
 	<groupId>com.gtorresoft.poc.grpc.streaming</groupId>
 	<artifactId>ecommerce</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ecommerce</name>
 	<description>POC grpc streaming</description>
-	<dependencies>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<org.apache.commons.version>3.3.2</org.apache.commons.version>
+		<exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
+		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+		<java.version>17</java.version>
+
+		<!-- gRPC -->
+		<io.grpc.version>1.57.0</io.grpc.version>
+		<protoc.version>3.17.2</protoc.version>
+		<os-maven-plugin.version>1.6.2</os-maven-plugin.version>
+		<protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
+		<annotation-api.version>1.3.2</annotation-api.version>
 
 		<!-- logging -->
+		<org.slf4j.version>1.7.32</org.slf4j.version>
+		<logback.version>1.2.7</logback.version>
+
+		<!-- neo4j -->
+		<!--<spring-data-neo4j.version>5.0.1.RELEASE</spring-data-neo4j.version>
+		<neo4j-ogm-test.version>3.1.2</neo4j-ogm-test.version>
+		<neo4j-ogm-embedded-driver.version>3.1.2</neo4j-ogm-embedded-driver.version>-->
+
+	</properties>
+
+	<dependencies>
+		<!-- Spring Boot
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>-->
+
+		<!-- logging
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -29,7 +78,7 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
 			<version>${logback.version}</version>
-		</dependency>
+		</dependency>-->
 
 		<!-- Random -->
 		<dependency>
@@ -67,6 +116,13 @@
 			<artifactId>javax.annotation-api</artifactId>
 			<version>${annotation-api.version}</version>
 		</dependency>
+
+		<!-- grpc spring boot starter -->
+		<dependency>
+			<groupId>net.devh</groupId>
+			<artifactId>grpc-server-spring-boot-starter</artifactId>
+			<version>2.14.0.RELEASE</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -78,7 +134,10 @@
 			</extension>
 		</extensions>
 		<plugins>
-
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -117,55 +176,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<org.apache.commons.version>3.3.2</org.apache.commons.version>
-		<exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
-		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-		<java.version>1.8</java.version>
-
-		<!-- gRPC -->
-		<io.grpc.version>1.40.1</io.grpc.version>
-		<protoc.version>3.17.2</protoc.version>
-		<os-maven-plugin.version>1.6.2</os-maven-plugin.version>
-		<protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
-		<annotation-api.version>1.2</annotation-api.version>
-
-		<!-- logging -->
-		<org.slf4j.version>1.7.32</org.slf4j.version>
-		<logback.version>1.2.7</logback.version>
-
-		<!-- neo4j -->
-		<!--<spring-data-neo4j.version>5.0.1.RELEASE</spring-data-neo4j.version>
-		<neo4j-ogm-test.version>3.1.2</neo4j-ogm-test.version>
-		<neo4j-ogm-embedded-driver.version>3.1.2</neo4j-ogm-embedded-driver.version>-->
-
-	</properties>
-	<!--<properties>
-		<java.version>11</java.version>
-	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>-->
-
 </project>
