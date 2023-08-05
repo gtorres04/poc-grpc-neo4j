@@ -35,16 +35,21 @@ public class StoreService extends StoreProviderGrpc.StoreProviderImplBase {
 
     @Override
     public void unaryStreamingGetProductById(ProductById request, StreamObserver<Product> responseObserver) {
+        productRepository.findById(Long.parseLong(request.getProductId()))
+                .ifPresentOrElse(
+                        productNode -> {
+                            Product response = Product.newBuilder()
+                                    .setProductId(productNode.getId().toString())
+                                    .setProductName(productNode.getName())
+                                    .setProductDescription(productNode.getDescription())
+                                    .setProductPrice(productNode.getPrice())
+                                    .build();
+                            responseObserver.onNext(response);
+                            responseObserver.onCompleted();
+                        },
+                        () -> responseObserver.onError(new RuntimeException("Product not found"))
+                        );
 
-        Random random = new Random();
-        Product response = Product.newBuilder()
-                .setProductId(request.getProductId())
-                .setProductName(RandomStringUtils.randomAlphanumeric(10))
-                .setProductDescription(RandomStringUtils.randomAlphanumeric(10))
-                .setProductPrice(random.nextDouble())
-                .build();
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
     }
 
     @Override
@@ -70,7 +75,7 @@ public class StoreService extends StoreProviderGrpc.StoreProviderImplBase {
 
     @Override
     public StreamObserver<Product> clientSideStreamingCreateOrder(final StreamObserver<Order> responseObserver) {
-        return new StreamObserver<Product>() {
+        return new StreamObserver<>() {
 
             int count;
             double price = 0.0;
@@ -115,7 +120,7 @@ public class StoreService extends StoreProviderGrpc.StoreProviderImplBase {
 
     @Override
     public StreamObserver<Stock> bidirectionalStreamingUpdateStock(final StreamObserver<StockByProduct> responseObserver) {
-        return new StreamObserver<Stock>() {
+        return new StreamObserver<>() {
 
             @Override
             public void onNext(Stock stock) {
