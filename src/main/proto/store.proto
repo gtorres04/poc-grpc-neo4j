@@ -13,16 +13,17 @@ option objc_class_prefix = "RTG";
 service StoreProvider {
   
   rpc unaryStreamingCreateProduct(Product) returns (Product);
-
   rpc unaryStreamingGetProductById(ProductById) returns (Product);
-
   rpc serverSideStreamingGetProductsByName(ProductsByName) returns (stream Product) {}
-  
   rpc clientSideStreamingCreateOrder(stream Product) returns (Order) {}
+  rpc clientSideStreamingCreateOrderByProductId(stream ProductToOder) returns (stream Order) {}
   
-  rpc bidirectionalStreamingUpdateStock(stream Stock) returns (stream StockByProduct) {}
   
-  
+}
+
+message ProductToOder {
+  string product_id = 1;
+  int32 amount = 2;
 }
 
 message ProductById {
