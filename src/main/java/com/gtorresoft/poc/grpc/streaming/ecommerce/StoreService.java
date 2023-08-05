@@ -14,7 +14,8 @@ import java.util.Random;
 @GrpcService
 public class StoreService extends StoreProviderGrpc.StoreProviderImplBase {
 
-    //private static final Logger logger = LoggerFactory.getLogger(StoreService.class.getName());
+    @Autowired
+    ProductRepository productRepository;
 
     @Override
     public void unaryStreamingCreateProduct(Product request, StreamObserver<Product> responseObserver) {
@@ -25,12 +26,6 @@ public class StoreService extends StoreProviderGrpc.StoreProviderImplBase {
         productRepository.save(productNode);
         responseObserver.onNext(request.toBuilder().setProductId(productNode.getId().toString()).build());
         responseObserver.onCompleted();
-    }
-
-    @Autowired
-    ProductRepository productRepository;
-
-    StoreService() {
     }
 
     @Override
@@ -48,28 +43,22 @@ public class StoreService extends StoreProviderGrpc.StoreProviderImplBase {
                             responseObserver.onCompleted();
                         },
                         () -> responseObserver.onError(new RuntimeException("Product not found"))
-                        );
+                );
 
     }
 
     @Override
     public void serverSideStreamingGetProductsByName(ProductsByName request, StreamObserver<Product> responseObserver) {
-
-        for (int i = 1; i <= 5; i++) {
-            Random random = new Random();
-            Product product = Product.newBuilder()
-                    .setProductId(RandomStringUtils.randomAlphanumeric(10))
-                    .setProductName(request.getProductName() + " " + RandomStringUtils.randomAlphanumeric(10))
-                    .setProductDescription(RandomStringUtils.randomAlphanumeric(20))
-                    .setProductPrice(random.nextDouble())
-                    .build();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            responseObserver.onNext(product);
-        }
+        productRepository.findByName(request.getProductName())
+                .forEach(productNode -> {
+                    Product response = Product.newBuilder()
+                            .setProductId(productNode.getId().toString())
+                            .setProductName(productNode.getName())
+                            .setProductDescription(productNode.getDescription())
+                            .setProductPrice(productNode.getPrice())
+                            .build();
+                    responseObserver.onNext(response);
+                });
         responseObserver.onCompleted();
     }
 
