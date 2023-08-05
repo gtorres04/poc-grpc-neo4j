@@ -13,6 +13,7 @@ public class ProductNode {
     private String name;
     private String description;
     private Double price;
+    private Long amount;
 
     public Long getId() {
         return id;
@@ -44,5 +45,13 @@ public class ProductNode {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Long getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Long amount) {
+        this.amount = amount;
     }
 }
