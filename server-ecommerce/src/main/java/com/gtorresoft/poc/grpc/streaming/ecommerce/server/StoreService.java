@@ -1,6 +1,12 @@
-package com.gtorresoft.poc.grpc.streaming.ecommerce;
+package com.gtorresoft.poc.grpc.streaming.ecommerce.server;
 
 import com.google.type.Date;
+import com.gtorresoft.poc.grpc.streaming.ecommerce.Order;
+import com.gtorresoft.poc.grpc.streaming.ecommerce.Product;
+import com.gtorresoft.poc.grpc.streaming.ecommerce.ProductById;
+import com.gtorresoft.poc.grpc.streaming.ecommerce.ProductToOder;
+import com.gtorresoft.poc.grpc.streaming.ecommerce.ProductsByName;
+import com.gtorresoft.poc.grpc.streaming.ecommerce.StoreProviderGrpc;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;

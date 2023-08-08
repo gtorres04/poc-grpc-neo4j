@@ -1,4 +1,4 @@
-package com.gtorresoft.poc.grpc.streaming.ecommerce;
+package com.gtorresoft.poc.grpc.streaming.ecommerce.server;
 
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
