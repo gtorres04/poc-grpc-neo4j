@@ -8,10 +8,10 @@ import java.io.IOException;
 
 @SpringBootApplication
 @EnableNeo4jRepositories
-public class EcommerceApplication {
+public class ServerEcommerceApplication {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		SpringApplication.run(EcommerceApplication.class, args);
+		SpringApplication.run(ServerEcommerceApplication.class, args);
 	}
 
 }
